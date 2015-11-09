@@ -5,7 +5,6 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/docker/machine/log"
 	"github.com/moul/tictactoe"
 )
 
@@ -41,7 +40,6 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	ttt.Set(2, 1, m.Get("2-1"))
 	ttt.Set(2, 2, m.Get("2-2"))
 	ttt.SetPlayer(m.Get("you"))
-	log.Errorf("TEST: %s", ttt.ShowMap())
 
 	next, err := ttt.Next()
 	if err != nil {

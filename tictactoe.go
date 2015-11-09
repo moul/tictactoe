@@ -2,6 +2,7 @@ package tictactoe
 
 import (
 	"fmt"
+	"math"
 	"strings"
 
 	"github.com/docker/machine/log"
@@ -14,9 +15,9 @@ type TicTacToe struct {
 }
 
 type Movement struct {
-	X     int
 	Y     int
-	Score int
+	X     int
+	Score float64
 }
 
 func NewTicTacToe() TicTacToe {
@@ -141,13 +142,15 @@ func (t *TicTacToe) ScoreMoves(currentPlayer string, deepness int) []Movement {
 
 	moves := t.AvailableMoves()
 
+	multiplier := 1 - math.Log(float64(deepness))
+
 	for idx, move := range moves {
 		t.Set(move.Y, move.X, currentPlayer)
 		switch t.Winner() {
 		case t.Player:
-			moves[idx].Score += 10 * (9 - deepness)
+			moves[idx].Score += 10 * multiplier
 		case t.Opponent():
-			moves[idx].Score -= 10 * (9 - deepness)
+			moves[idx].Score -= 10 * multiplier
 		default:
 			for _, subMove := range t.ScoreMoves(t.NextPlayer(currentPlayer), deepness+1) {
 				moves[idx].Score += subMove.Score
@@ -188,6 +191,8 @@ func (t *TicTacToe) Next() (*Movement, error) {
 		return nil, fmt.Errorf("no such move")
 	}
 
+	fmt.Println(moves)
+
 	maxIdx := 0
 	maxScore := moves[0].Score
 
@@ -198,5 +203,6 @@ func (t *TicTacToe) Next() (*Movement, error) {
 		}
 	}
 	move := moves[maxIdx]
+	fmt.Println(move, maxScore, maxIdx)
 	return &move, nil
 }
