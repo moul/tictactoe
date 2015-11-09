@@ -122,7 +122,11 @@ func (t *TicTacToe) AvailableMoves() []Movement {
 	for y := 0; y < t.Size; y++ {
 		for x := 0; x < t.Size; x++ {
 			if t.Map[y][x] == "" {
-				moves = append(moves, Movement{Y: y, X: x})
+				move := Movement{Y: y, X: x}
+				if y == t.Size/2 && x == t.Size/2 {
+					move.Score += 50
+				}
+				moves = append(moves, move)
 			}
 		}
 	}
@@ -142,15 +146,23 @@ func (t *TicTacToe) ScoreMoves(currentPlayer string, deepness int) []Movement {
 
 	moves := t.AvailableMoves()
 
-	multiplier := 1 - math.Log(float64(deepness))
+	multiplier := 1 - math.Log(float64(deepness)*2-1)
 
 	for idx, move := range moves {
 		t.Set(move.Y, move.X, currentPlayer)
 		switch t.Winner() {
 		case t.Player:
-			moves[idx].Score += 10 * multiplier
+			if deepness == 1 {
+				moves[idx].Score += 100000
+			} else {
+				moves[idx].Score += 10 * multiplier
+			}
 		case t.Opponent():
-			moves[idx].Score -= 10 * multiplier
+			if deepness == 2 {
+				moves[idx].Score -= 100000
+			} else {
+				moves[idx].Score -= 10 * multiplier
+			}
 		default:
 			for _, subMove := range t.ScoreMoves(t.NextPlayer(currentPlayer), deepness+1) {
 				moves[idx].Score += subMove.Score
