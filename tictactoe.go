@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/moul/ssh2docker/vendor/github.com/Sirupsen/logrus"
+	"github.com/docker/machine/log"
 )
 
 type TicTacToe struct {
@@ -135,7 +135,7 @@ func (t *TicTacToe) ScoreMoves(currentPlayer string, deepness int) []Movement {
 	}
 
 	if deepness > 10 {
-		logrus.Errorf("deepness > 10")
+		log.Errorf("deepness > 10")
 		return nil
 	}
 
