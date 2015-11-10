@@ -2,10 +2,16 @@ package main
 
 import (
 	"fmt"
+	"math/rand"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/moul/tictactoe"
 )
+
+func init() {
+	rand.Seed(time.Now().UTC().UnixNano())
+}
 
 func main() {
 	r := gin.Default()

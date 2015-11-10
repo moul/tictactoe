@@ -3,6 +3,7 @@ package tictactoe
 import (
 	"fmt"
 	"math"
+	"math/rand"
 	"strings"
 )
 
@@ -142,6 +143,7 @@ func (t *TicTacToe) ScoreMoves(currentPlayer string, deepness int) []Movement {
 	moves := t.AvailableMoves()
 
 	if deepness > 7 {
+		// useless to go deeper
 		return moves
 	}
 
@@ -184,8 +186,9 @@ func (t *TicTacToe) Next() (*Movement, error) {
 		return nil, fmt.Errorf("game is already finished")
 	}
 
+	// first move is random
 	if len(t.AvailableMoves()) == t.Size*t.Size {
-		return &Movement{Y: t.Size / 2, X: t.Size / 2}, nil
+		return &Movement{Y: rand.Intn(t.Size), X: rand.Intn(t.Size)}, nil
 	}
 
 	moves := t.ScoreMoves(t.Player, 1)
