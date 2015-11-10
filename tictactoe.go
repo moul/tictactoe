@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"math"
 	"strings"
-
-	"github.com/docker/machine/log"
 )
 
 type TicTacToe struct {
@@ -123,9 +121,11 @@ func (t *TicTacToe) AvailableMoves() []Movement {
 		for x := 0; x < t.Size; x++ {
 			if t.Map[y][x] == "" {
 				move := Movement{Y: y, X: x}
-				if y == t.Size/2 && x == t.Size/2 {
-					move.Score += 50
-				}
+				/*
+					if y == t.Size/2 && x == t.Size/2 {
+						move.Score += 50
+					}
+				*/
 				moves = append(moves, move)
 			}
 		}
@@ -139,30 +139,21 @@ func (t *TicTacToe) ScoreMoves(currentPlayer string, deepness int) []Movement {
 		return nil
 	}
 
-	if deepness > 10 {
-		log.Errorf("deepness > 10")
-		return nil
-	}
-
 	moves := t.AvailableMoves()
 
-	multiplier := 1 - math.Log(float64(deepness)*2-1)
+	if deepness > 7 {
+		return moves
+	}
+
+	value := math.Pow(float64(t.Size*t.Size+1), float64(t.Size*t.Size-deepness))
 
 	for idx, move := range moves {
 		t.Set(move.Y, move.X, currentPlayer)
 		switch t.Winner() {
 		case t.Player:
-			if deepness == 1 {
-				moves[idx].Score += 100000
-			} else {
-				moves[idx].Score += 10 * multiplier
-			}
+			moves[idx].Score = value
 		case t.Opponent():
-			if deepness == 2 {
-				moves[idx].Score -= 100000
-			} else {
-				moves[idx].Score -= 10 * multiplier
-			}
+			moves[idx].Score = -value
 		default:
 			for _, subMove := range t.ScoreMoves(t.NextPlayer(currentPlayer), deepness+1) {
 				moves[idx].Score += subMove.Score
