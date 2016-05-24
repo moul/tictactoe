@@ -197,8 +197,6 @@ func (t *TicTacToe) Next() (*Movement, error) {
 		return nil, fmt.Errorf("no such move")
 	}
 
-	fmt.Println(moves)
-
 	maxIdx := 0
 	maxScore := moves[0].Score
 
@@ -209,6 +207,6 @@ func (t *TicTacToe) Next() (*Movement, error) {
 		}
 	}
 	move := moves[maxIdx]
-	fmt.Println(move, maxScore, maxIdx)
+	// fmt.Println(move, maxScore, maxIdx)
 	return &move, nil
 }

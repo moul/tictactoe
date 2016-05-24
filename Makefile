@@ -1,3 +1,10 @@
+SOURCES :=	$(shell find . -name "*.go")
+
+
+tictactoe-bolosseum: $(SOURCES)
+	go build -o ./tictactoe-bolosseum ./cmd/tictactoe-bolosseum
+
+
 .PHONY: goapp_serve
 goapp_serve:
 	goapp serve ./cmd/appspot/app.yaml
